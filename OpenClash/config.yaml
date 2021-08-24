@@ -1,0 +1,297 @@
+# Copyright (c) 2018 Dreamacro
+# 接管：不支持在此页面直接修改，请到全局设置页面进行修改
+
+# Port of HTTP(S) proxy server on the local end
+# 此项将被接管
+port: 7890
+
+# Port of SOCKS5 proxy server on the local end
+# 此项将被接管
+socks-port: 7891
+
+# Transparent proxy server port for Linux and macOS
+# 此项将被接管
+redir-port: 7892
+
+# HTTP(S) and SOCKS5 server on the same port
+mixed-port: 7890
+
+# Set to true to allow connections to the local-end server from
+# other LAN IP addresses
+# 此项将被接管为true
+allow-lan: true
+
+# This is only applicable when `allow-lan` is `true`
+# '*': bind all IP addresses
+# 192.168.122.11: bind a single IPv4 address
+# "[aaaa::a8aa:ff:fe09:57d8]": bind a single IPv6 address
+# HTTP(S)\SOCKS5 监听地址，此项将被接管为all
+bind-address: "*" 
+
+# Clash router working mode
+# rule: rule-based packet routing
+# global: all packets will be forwarded to a single endpoint
+# direct: directly forward the packets to the Internet
+# 此项将被接管
+mode: rule
+
+# Clash by default prints logs to STDOUT
+# info / warning / error / debug / silent
+# 此项将被接管
+log-level: info
+
+# When set to false, resolver won't translate hostnames to IPv6 addresses
+# 此项将被接管
+ipv6: false
+
+# RESTful web API listening address
+# 此项将被接管
+external-controller: 0.0.0.0:9090
+
+# A relative path to the configuration directory or an absolute path to a
+# directory in which you put some static web resource. Clash core will then
+# serve it at `http://{{external-controller}}/ui`.
+# 此项将被接管
+external-ui: "/usr/share/openclash/dashboard"
+
+# Secret for the RESTful API (optional)
+# Authenticate by spedifying HTTP header `Authorization: Bearer ${secret}`
+# ALWAYS set a secret if RESTful API is listening on 0.0.0.0
+# 此项将被接管
+secret: '123456'
+
+# authentication of local SOCKS5/HTTP(S) server
+# 此项将被接管
+authentication:
+  - "user1:pass1"
+  - "user2:pass2"
+
+# Outbound interface name
+interface-name: br-lan
+
+# tun option
+# 此项将被接管
+tun:
+#  enable: false
+#  stack: system
+#  dns-hijack:
+#  - tcp://8.8.8.8:53
+#  - tcp://8.8.4.4:53
+
+# Static hosts for DNS server and connection establishment, only works
+# when `dns.enhanced-mode` is `redir-host`.
+#
+# Wildcard hostnames are supported (e.g. *.clash.dev, *.foo.*.example.com)
+# Non-wildcard domain names have a higher priority than wildcard domain names
+# e.g. foo.example.com > *.example.com > .example.com
+# P.S. +.foo.com equals to .foo.com and foo.com
+hosts:
+  # '*.clash.dev': 127.0.0.1
+  # '.dev': 127.0.0.1
+  # 'alpha.clash.dev': '::1'
+
+profile:
+  # store the `select` results in $HOME/.config/clash/.cache
+  # when two different configurations have groups with the same name, the selected values are shared
+  # set false if you don't want this behavior
+  store-selected: true
+  # open tracing exporter API
+  tracing: true
+
+# DNS server settings
+# This section is optional. When not present, the DNS server will be disabled.
+# 如订阅配置无包括此项的所有DNS设置，OpenClash将自动添加
+dns:
+  enable: true # set true to enable dns (default is false) # 此项将被接管为true
+  ipv6: false # default is false # 此项将被接管
+  listen: 0.0.0.0:53 # 端口为53时将被接管为7874
+  # These nameservers are used to resolve the DNS nameserver hostnames below.
+  # Specify IP addresses only
+  default-nameserver:
+    - 114.114.114.114
+    - 8.8.8.8
+  enhanced-mode: redir-host # or fake-ip # 此项将被接管
+  fake-ip-range: 198.18.0.1/16 # Fake IP addresses pool CIDR # 此项将被接管
+  use-hosts: true # lookup hosts and return IP record # 此项将被接管
+  # Hostnames in this list will not be resolved with fake IPs
+  # i.e. questions to these domain names will always be answered with their
+  # real IP addresses
+  # fake-ip-filter:
+  #   - '*.lan'
+  #   - localhost.ptlogin2.qq.com
+  
+  # Supports UDP, TCP, DoT, DoH. You can specify the port to connect to.
+  # All DNS questions are sent directly to the nameserver, without proxies
+  # involved. Clash answers the DNS question with the first result gathered.
+  nameserver:
+  - 114.114.114.114
+  - https://1.1.1.1/dns-query # dns over https
+  fallback: # concurrent request with nameserver, fallback used when GEOIP country isn't CN
+  - tcp://1.1.1.1
+  fallback-filter:
+    geoip: true # default
+    ipcidr: # ips in these subnets will be considered polluted
+      - 240.0.0.0/4
+
+# 以上设置您可直接覆盖到配置文件,无需更改
+# Openclash 不会对下方服务器设置进行任何更改，请确保设置正确
+
+#proxy-providers: # 代理集设置，此部分与Proxy两者不能同时删除
+#  pro:
+#    type: http
+#    path: ./proxy_provider/pro.yaml
+#    url: https://xxx
+#    interval: 3600
+#    health-check:
+#      enable: true
+#      url: http://www.gstatic.com/generate_204
+#      interval: 300
+#  iplc:
+#    type: file
+#    path: ./proxy_provider/iplc.yaml
+#    health-check:
+#      enable: true
+#      url: http://www.gstatic.com/generate_204
+#      interval: 300
+
+proxies: # 节点设置，此部分与proxy-provider两者不能同时删除
+- name: "🇸🇬 [SS]WebHorizon"
+  type: ss
+  server: disneyplus.yzyz.ga
+  port: 16002
+  cipher: aes-256-gcm
+  password: "UJLKVASfmT"
+  udp: true
+- name: "🇸🇬 [VMESS]Amazon"
+  type: vmess
+  server: amazon.yzyz.ga
+  port: 36555
+  uuid: cecf9ec5-6ab0-44ce-c018-3bed34670d33
+  alterId: 64
+  cipher: auto
+ # udp: true
+  tls: false
+  skip-cert-verify: true
+ # servername: example.com # priority over wss host
+ # network: ws
+ # ws-path: /path
+ # ws-headers:
+ #    Host: v2ray.com
+
+proxy-groups: # 此参数必须保留,不能删除
+- name: Selection
+  type: select
+  proxies:
+    - 🌐Direct
+    - 🇸🇬 [VMESS]Amazon
+- name: Malaysia
+  type: select
+  proxies:
+    - 🌐Direct
+- name: China
+  type: select
+  proxies:
+    - 🌐Direct
+    - 🇸🇬 [VMESS]Amazon
+- name: Singapore
+  type: select
+  proxies:
+    - 🌐Direct
+    - 🇸🇬 [VMESS]Amazon
+- name: Netflix
+  type: select
+  proxies:
+    - 🌐Direct
+    - 🇸🇬 [VMESS]Amazon
+- name: Disney+
+  type: select
+  proxies:
+    - 🇸🇬 [VMESS]Amazon
+    - 🇸🇬 [SS]WebHorizon
+- name: TV APP
+  type: select
+  proxies:
+    - 🌐Direct
+    - 🇸🇬 [VMESS]Amazon
+- name: Speedtest
+  type: select
+  proxies:
+    - 🌐Direct
+    - 🇸🇬 [VMESS]Amazon
+- name: 🛡Guard
+  type: select
+  proxies:
+    - ⛔️Reject
+    - 🌐Direct
+- name: 🌐Direct
+  type: select
+  proxies:
+    - DIRECT
+- name: ⛔️Reject
+  type: select
+  proxies:
+    - REJECT
+
+# https://lancellc.gitbook.io/clash/clash-config-file/rule-provider
+#rule-providers:
+#  name: # name of the provider
+#    type: http # type of the provider, it can be a HTTP or a File
+#    behavior: classical # or ipcidr、domain
+#    path: # where is the file, ./ relative to clash home
+#    url: # only available when type is HTTP, where to download a file. You don't need to create a new file in local space.
+#    interval: # auto-update interval, only available when type is HTTP
+
+# https://lancellc.gitbook.io/clash/clash-config-file/script
+#script:
+#  code: |
+#    def main(ctx, metadata):
+#      ip = metadata["dst_ip"] = ctx.resolve_ip(metadata["host"])
+#      if ip == "":
+#        return "DIRECT"
+#        
+#      code = ctx.geoip(ip)
+#      if code == "LAN" or code == "CN":
+#        return "DIRECT"
+#      
+#      return "Proxy" # default policy for requests which are not matched by any other script
+      
+rules: # 此参数必须保留,不能删除
+# 如果您将一直使用第三方规则，下方可以留空。
+- DOMAIN-SUFFIX,google.com,Selection
+- DOMAIN-KEYWORD,google,Selection
+- DOMAIN-SUFFIX,youtube.com,Selection
+- DOMAIN,google.com,Selection
+- DOMAIN-SUFFIX,ad.com,REJECT
+- IP-CIDR,127.0.0.0/8,DIRECT
+# Netflix
+- DOMAIN-SUFFIX,nflxvideo.net,Netflix
+- DOMAIN-SUFFIX,netflix.com,Netflix
+- DOMAIN-SUFFIX,fast.com,Netflix
+# DisneyPlus Login
+- DOMAIN-SUFFIX,disneyplus.com,Disney+
+- DOMAIN-SUFFIX,disney-plus.net,Disney+
+- DOMAIN-SUFFIX,disney-plus.net,Disney+
+# DisneyPlus Streaming
+- DOMAIN-SUFFIX,dssott.com,Singapore
+# China Web
+- DOMAIN-SUFFIX,koolshare.cn,China
+- DOMAIN-SUFFIX,tongdun.net,China
+- DOMAIN-SUFFIX,right.com.cn,China
+- DOMAIN-SUFFIX,qhres2.com,China
+- DOMAIN-SUFFIX,pstatp.com,China
+- DOMAIN-SUFFIX,toutiao.com,China
+- DOMAIN-SUFFIX,baidu.com,China
+- DOMAIN-SUFFIX,17jita.com,China
+- DOMAIN-SUFFIX,jitaba.cn,China
+- DOMAIN-SUFFIX,ccguitar.cn,China
+- DOMAIN-SUFFIX,echangwang.com,China
+# Speedtest
+- DOMAIN-SUFFIX,speedtest.net,Speedtest
+# rename SOURCE-IP-CIDR and would remove after prerelease
+- SRC-IP-CIDR,192.168.1.201/32,DIRECT
+- GEOIP,CN,China
+# - DST-PORT,80,DIRECT
+# - SRC-PORT,7777,DIRECT
+# or use rule with provider
+# - RULE-SET,name,DIRECT
+- MATCH,Selection
